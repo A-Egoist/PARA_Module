@@ -1,7 +1,7 @@
 # PARA_Module
 This is the PyTorch implementation of our paper "Popularity--quality Driven Rating Prediction Adjustment with Trisecting-acting-outcome."
 
-![The Workflow of PARA](img\PARA-workflow.svg)
+![The Workflow of PARA](img/PARA-workflow.svg)
 
 ## Requirements
 
