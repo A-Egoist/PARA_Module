@@ -1,0 +1,55 @@
+# global setting
+batch_size: 32768
+test_batch_size: 64
+embedding_dim: 128
+num_workers: 0
+
+
+# dataset setting
+ciao-num_epoch: 500
+douban-book-num_epoch: 500
+douban-movie-num_epoch: 500
+ml-1m-num_epoch: 500
+running-example-num_epoch: 1
+
+Base-ciao-lr: 0.1
+Base-douban-book-lr: 0.001
+Base-douban-movie-lr: 0.001
+Base-ml-1m-lr: 0.01
+Base-running-example-lr: 0.01
+
+PARA-ciao-lr: 0.1
+PARA-douban-book-lr: 0.001
+PARA-douban-movie-lr: 0.001
+PARA-ml-1m-lr: 0.001
+PARA-running-example-lr: 0.01
+
+n_layers-ciao: 2
+n_layers-douban-book: 2
+n_layers-douban-movie: 2
+n_layers-ml-1m: 2
+n_layers-running-example: 2
+
+lamb-ciao: 1
+lamb-douban-book: 0.1
+lamb-douban-movie: 0.01
+lamb-ml-1m: 0.01
+lamb-ml-10m: 0.01
+lamb-running-example: 0.1
+
+
+# model setting
+PARA_alpha-running-example: 0.8
+PARA_beta-running-example: 0.8
+
+PARA_alpha-ciao: 0.7
+PARA_beta-ciao: 0.89
+
+PARA_alpha-douban-book: 0.8
+PARA_beta-douban-book: 0.97
+
+PARA_alpha-douban-movie: 0.95
+PARA_beta-douban-movie: 0.85
+
+PARA_alpha-ml-1m: 0.95
+PARA_beta-ml-1m: 0.99
