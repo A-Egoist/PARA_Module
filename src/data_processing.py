@@ -139,7 +139,6 @@ def get_graph(dataset, num_users, num_items, train_data):
         graph_index = torch.from_numpy(graph_index)
         graph_data = torch.from_numpy(graph_data)
 
-        # graph_size = torch.Size([num_users + num_items, num_users + num_items])
         graph = torch.sparse.FloatTensor(graph_index, graph_data, torch.Size([num_users + num_items, num_users + num_items]))
         graph = graph.coalesce()
     else:
@@ -155,18 +154,6 @@ def get_graph(dataset, num_users, num_items, train_data):
         index = torch.cat([first_sub, second_sub], dim=1)
         data = torch.ones(index.size(-1)).int()
 
-        # DefaultCPUAllocator: not enough memory
-        # graph = torch.sparse.IntTensor(index, data, torch.Size([num_users + num_items, num_users + num_items]))
-        # dense = graph.to_dense()
-        # D = torch.sum(dense, dim=1).float()
-        # D[D == 0.] = 1.
-        # D_sqrt = torch.sqrt(D).unsqueeze(dim=0)
-        # dense = dense / D_sqrt
-        # dense = dense / D_sqrt.t()
-        # index = dense.nonzero()
-        # data = dense[dense >= 1e-9]
-        # graph = torch.sparse.FloatTensor(index.t(), data, torch.Size([num_users + num_items, num_users + num_items]))
-
         graph = torch.sparse.FloatTensor(index, data, torch.Size([num_users + num_items, num_users + num_items]))
         row_sum = torch.sparse.sum(graph, dim=1).to_dense()
         row_sum[row_sum == 0] = 1.
@@ -176,7 +163,6 @@ def get_graph(dataset, num_users, num_items, train_data):
         data = data * d_inv_sqrt[row] * d_inv_sqrt[col]
         graph = torch.sparse.FloatTensor(index, data, torch.Size([num_users + num_items, num_users + num_items]))
         
-        # np.save(graph_index_path, index.t().numpy())
         np.save(graph_index_path, index.numpy())
         np.save(graph_data_path, data.numpy())
         graph = graph.coalesce()
@@ -246,7 +232,6 @@ def douban_book_split():
     valid_data_path = './data/Douban/book/douban_book.valid'
     test_data_path = './data/Douban/book/douban_book.test'
     data = pd.read_csv(data_path, sep='\t', header=None, skiprows=1, names=['user', 'item', 'rating', 'timestamp'], usecols=[0, 1, 2, 3], dtype=np.int32)
-    # data.loc[data['rating']==-1, 'rating'] = 3
     data.drop(data[data['rating']==-1].index, inplace=True)
     data = data.sort_values(by='timestamp')
 
@@ -285,7 +270,6 @@ def douban_book_split():
 
     total_len = len(data)
     train_end = int(total_len * 0.6)
-    # valid_end = int(total_len * 0.8)  # 6:2:2
     valid_end = int(total_len * 0.7)  # 6:1:3
 
     train_data = data.iloc[:train_end]
@@ -399,7 +383,6 @@ def ml_1m_split():
 
     total_len = len(data)
     train_end = int(total_len * 0.6)
-    # valid_end = int(total_len * 0.8)  # 6:2:2
     valid_end = int(total_len * 0.7)  # 6:1:3
 
     train_data = data.iloc[:train_end]
@@ -442,18 +425,18 @@ def calc_sparse(dataset):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='argument parser')
-    parser.add_argument('--dataset', type=str, default='amazon-music', help="['amazon-music', 'ciao', 'douban-book', 'douban-movie', 'ml-1m', 'ml-10m']")
+    parser.add_argument('--dataset', type=str, default='ciao', choices=['ciao', 'douban-book', 'douban-movie', 'ml-1m'])
     args = parser.parse_args()
 
-    calc_sparse('ciao')
-    calc_sparse('douban-book')
-    calc_sparse('douban-movie')
-    calc_sparse('ml-1m')
     if args.dataset == 'ciao':
         ciao_split()
+        calc_sparse('ciao')
     elif args.dataset == 'douban-book':
         douban_book_split()
+        calc_sparse('douban-book')
     elif args.dataset == 'douban-movie':
         douban_movie_split()
+        calc_sparse('douban-movie')
     elif args.dataset == 'ml-1m':
         ml_1m_split()
+        calc_sparse('ml-1m')

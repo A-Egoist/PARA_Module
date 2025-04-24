@@ -10,7 +10,8 @@ data/Douban/*
 data/LightGCN_graph/*
 data/ml-1m/*
 data/RunningExample/*
-save_model/*.pt
+# save_model/*.pt
+save_model/*_temp.pt
 *.exe
 
 # Generate by GitHub
